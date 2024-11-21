@@ -7,7 +7,7 @@ public class Conexion {
     private static Connection cnx = null;
 
     public static Connection obtener() throws SQLException, ClassNotFoundException {
-        if (cnx == null) {
+        if (cnx == null || cnx.isClosed()) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 cnx = DriverManager.getConnection("jdbc:mysql://localhost/bibliotecadigital", "root", "");
@@ -19,7 +19,7 @@ public class Conexion {
     }
 
     public static void cerrar() throws SQLException {
-        if (cnx != null) {
+        if (cnx != null && !cnx.isClosed()) {
             cnx.close();
             cnx = null;
         }

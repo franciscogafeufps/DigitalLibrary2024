@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package modelo;
 
-/**
- *
- * @author estudiante
- */
+
 public class Libro {
     
     private String isbn;
@@ -67,12 +61,12 @@ public class Libro {
 
     public void setNumCopias(int numCopias) {
         this.numCopias = numCopias;
+    } 
+
+    @Override
+    public String toString() {
+        return "Libro{" + "isbn= " + isbn + ", titulo= " + titulo + ", autor= " + autor + ", genero= " + genero + ", numCopias= " + numCopias + '}';
     }
-    
-    
-    
-    
-    
     
     
 }

@@ -29,10 +29,10 @@ public class EstudianteDao {
     }
     
      
-     public void guardar(Estudiante estudiante) {
+    public void guardar(Estudiante estudiante) throws ClassNotFoundException {
     PreparedStatement consulta = null;
-        try {
-            consulta = conexion.prepareStatement("INSERT INTO estudiante (nombre, curso, email) VALUES (?, ?, ?)");
+        try {Connection conexion = Conexion.obtener();
+            consulta = conexion.prepareStatement("INSERT INTO estudiante (nombre, curso, correo_electronico) VALUES (?, ?, ?)");
             consulta.setString(1, estudiante.getNombre());
             consulta.setString(2, estudiante.getCurso());
             consulta.setString(3, estudiante.getEmail());
@@ -69,7 +69,7 @@ public class EstudianteDao {
      
      public Estudiante buscarPorId(int id) {
         Estudiante estudiante = null;
-        String query = "SELECT id, nombre, curso, email FROM estudiante WHERE id = ?";
+        String query = "SELECT id, nombre, curso, correo_electronico FROM estudiante WHERE id = ?";
         try (PreparedStatement buscar = conexion.prepareStatement(query)) {
             buscar.setInt(1, id);
             try (ResultSet resultado = buscar.executeQuery()) {
@@ -78,7 +78,7 @@ public class EstudianteDao {
                     estudiante.setId(resultado.getInt("id"));
                     estudiante.setNombre(resultado.getString("nombre"));
                     estudiante.setCurso(resultado.getString("curso"));
-                    estudiante.setEmail(resultado.getString("email"));
+                    estudiante.setEmail(resultado.getString("correo_electronico"));
                 }
             }
         } catch (SQLException ex) {
@@ -87,18 +87,44 @@ public class EstudianteDao {
         return estudiante;
     }
      
-     public boolean actualizar(Estudiante estudiante) {
-        String query = "UPDATE estudinate SET nombre = ?, curso = ?, email = ? WHERE id = ?";
-        try (PreparedStatement actualizar = conexion.prepareStatement(query)) {
+    public boolean actualizar(Estudiante estudiante) throws SQLException, ClassNotFoundException {
+        String query = "UPDATE estudiante SET nombre = ?, curso = ?, correo_electronico = ? WHERE id = ?";
+        try (Connection conexion = Conexion.obtener();
+            PreparedStatement actualizar = conexion.prepareStatement(query)) {
             actualizar.setString(1, estudiante.getNombre());
             actualizar.setString(2, estudiante.getCurso());
-            actualizar.setString(2, estudiante.getEmail());
+            actualizar.setString(3, estudiante.getEmail());
+            actualizar.setInt(4, estudiante.getId());
             int filasAfectadas = actualizar.executeUpdate();
             return filasAfectadas > 0;
         } catch (SQLException ex) {
             Logger.getLogger(EstudianteDao.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+     
+    public List<Estudiante> obtenerTodos() {
+        List<Estudiante> listaEstudiantes = new ArrayList<>();
+        String sql = "SELECT * FROM estudiante";
+
+        try (Connection conexion = Conexion.obtener();
+             PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Estudiante estudiante = new Estudiante();
+                estudiante.setId(rs.getInt("id"));
+                estudiante.setNombre(rs.getString("nombre"));
+                estudiante.setCurso(rs.getString("curso"));
+                estudiante.setEmail(rs.getString("correo_electronico"));
+
+                listaEstudiantes.add(estudiante);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listaEstudiantes;
     }
      
      

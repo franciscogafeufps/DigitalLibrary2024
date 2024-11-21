@@ -4,6 +4,9 @@
  */
 package vista;
 
+import Control.ControlEstudiante;
+import Control.ControlLibro;
+
 /**
  *
  * @author estudiante
@@ -111,6 +114,8 @@ public class Principal extends javax.swing.JFrame {
        estudianteForm.setVisible(true);
        // Se oculta el formulario Principal, si se desea
        this.setVisible(false);
+       
+       ControlEstudiante cEstudiante = new ControlEstudiante(estudianteForm);
         
     }//GEN-LAST:event_btnGestionEstudianteActionPerformed
 
@@ -121,6 +126,8 @@ public class Principal extends javax.swing.JFrame {
        libroForm.setVisible(true);
        // Se oculta el formulario Principal, si se desea
        this.setVisible(false);
+       
+       ControlLibro cLibro = new ControlLibro(libroForm);
         
     }//GEN-LAST:event_btnGestionLibroActionPerformed
 
@@ -131,6 +138,8 @@ public class Principal extends javax.swing.JFrame {
        prestamoForm.setVisible(true);
        // Se oculta el formulario Principal, si se desea
        this.setVisible(false);
+       
+       
     }//GEN-LAST:event_btnGestionPrestamoActionPerformed
 
     /**

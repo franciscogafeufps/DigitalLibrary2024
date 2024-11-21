@@ -4,6 +4,7 @@ package Control;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import modelo.Estudiante;
 import modelo.DAO.EstudianteDao;
 import vista.JFEstudiante;
@@ -35,7 +36,7 @@ public class ControlEstudiante implements ActionListener{
         
         this.vEstudiante.btnGuardar.setActionCommand("Guardar");
         this.vEstudiante.btnActualizar.setActionCommand("Actualizar");
-        this.vEstudiante.btnMostrar.setActionCommand("Buscar");
+        this.vEstudiante.btnMostrar.setActionCommand("Mostrar");
         this.vEstudiante.btnEliminar.setActionCommand("Eliminar");
 
         this.vEstudiante.btnGuardar.addActionListener(this);        
@@ -43,7 +44,7 @@ public class ControlEstudiante implements ActionListener{
         this.vEstudiante.btnMostrar.addActionListener(this);
         this.vEstudiante.btnEliminar.addActionListener(this); 
         
-        JOptionPane.showMessageDialog(null, "Si esta escuchando");
+        //JOptionPane.showMessageDialog(null, "Si esta escuchando");
     }
     
     
@@ -56,7 +57,7 @@ public class ControlEstudiante implements ActionListener{
             case "Actualizar":
                 actualizarEstudiante();
                 break;
-            case "Buscar":
+            case "Mostrar":
                 mostrarEstudiante();
                 break;
             case "Eliminar":
@@ -75,22 +76,22 @@ public class ControlEstudiante implements ActionListener{
             nuevoEstudiante.setEmail(vEstudiante.txtEmail.getText());
 
             estudianteDao.guardar(nuevoEstudiante);
-            JOptionPane.showMessageDialog(vEstudiante, "Estudinate guardado exitosamente!");
+            JOptionPane.showMessageDialog(vEstudiante, "Estudiante guardado exitosamente!");
             limpiarCampos();
 
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(vEstudiante, "Por favor, ingrese valores válidos para los números.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(vEstudiante, "Error al guardar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(vEstudiante, "Error al guardar el estudiante: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void actualizarEstudiante(){
         try {
             Estudiante estudiante = new Estudiante();
-            estudiante.setId(Integer.parseInt(vEstudiante.txtId.getText()));
+            estudiante.setId(Integer.valueOf(vEstudiante.txtId.getText()));
             estudiante.setNombre(vEstudiante.txtNombre.getText());
-            estudiante.setEmail(vEstudiante.txtCurso.getText());
+            estudiante.setCurso(vEstudiante.txtCurso.getText());
             estudiante.setEmail(vEstudiante.txtEmail.getText());
 
             boolean actualizado = estudianteDao.actualizar(estudiante);
@@ -107,7 +108,14 @@ public class ControlEstudiante implements ActionListener{
     }
     
     private void mostrarEstudiante(){
-        
+        List<Estudiante> estudiantes = estudianteDao.obtenerTodos();
+        StringBuilder resultado = new StringBuilder();
+
+        for (Estudiante estudiante : estudiantes) {
+            resultado.append(estudiante.toString()).append("\n");
+        }
+
+        vEstudiante.areaResultado.setText(resultado.toString());
     }
     
     private void eliminarEstudiante(){
@@ -118,7 +126,7 @@ public class ControlEstudiante implements ActionListener{
             if (respuesta == JOptionPane.YES_OPTION) {
                 boolean eliminado = estudianteDao.eliminar(id);
                 if (eliminado) {
-                    JOptionPane.showMessageDialog(vEstudiante, "Estudinate eliminado exitosamente.");
+                    JOptionPane.showMessageDialog(vEstudiante, "Estudiante eliminado exitosamente.");
                     limpiarCampos();
                 } else {
                     JOptionPane.showMessageDialog(vEstudiante, "No se pudo eliminar el estudiante.");
